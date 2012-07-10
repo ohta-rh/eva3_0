@@ -3,7 +3,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Evangelion3.0: You can (not) redo.</title>
-
+<% if(process.env.NODE_ENV == "development" || !process.env.NODE_ENV){ %>
+  <script type="text/javascript" src="http://localhost:3000/socket.io/socket.io.js"></script>
+<%}else{%>
+  <script type="text/javascript" src="http://you-can-not-redo.herokuapp.com/socket.io/socket.io.js"></script>
+<%}%>
+<script type="text/javascript" src="/javascripts/jquery.min.js"></script>
 <script type="text/javascript" src="/javascripts/easeljs-0.4.2.min.js"></script>
 <script type="text/javascript" src="/javascripts/eva.js"></script>
 <script type="text/javascript" src="/javascripts/message.js"></script>
@@ -23,5 +28,11 @@ http://code.createjs.com -->
   <h2 style="margin-top: 200px;margin-left:100px; position: absolute; color:white;z-index:9999;">エヴァンゲリオン新劇場版:You can (not) redo.<br><span class="opened">西暦2012年11月17日公開</span></h2>
   <canvas class="canvasmain" id="canvas" width="1280" height="520">
   </canvas>
+  <div class="chatbox">
+    <form>
+      <input type="text" class="text-box" id="text-box" value="" size="60" />
+      <input type="button" id="send-btn" class="send-btn" value="send" />
+    </form>
+  </div>
 </body>
 </html>

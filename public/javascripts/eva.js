@@ -3,7 +3,41 @@
   var canvas;
   var stage;
   var list = []
+  var socket;
+  var product_url = 'http://you-can-not-redo.herokuapp.com'
    function init() {
+
+     socket = location.hostname == 'localhost' ? io.connect("http://localhost:3000") : io.connect(product_url);
+     socket.on("connect");
+
+     //Socket関係=====START
+     socket.on("message", function (data) {
+       label = new Text(data.value, "20px arial", "#FFF");
+       e = new Message();
+       if(Math.random() > 0.5){
+         e.x = Math.random() + 200;
+       }else{
+         e.x = Math.random() + 400;
+       }
+       e.y = Math.random() * 400;
+       label.x = e.x
+       label.y = e.y
+       stage.addChild(e)
+       stage.addChild(label)
+       list.push(e);
+     });
+
+     $('#send-btn').click(function(){
+       msg = $("#text-box").val();
+       $("#text-box").val("");
+       if (msg.length > 0) {
+         socket.emit("message", {value:msg})
+        }
+     });
+
+     
+     //=================END
+
      opened_at = new Date(2012,11,17,0,0,0);
      canvas = document.getElementById("canvas"); // canvas要素を取得
      stage = new Stage(canvas); // Stageにセットする

@@ -24,3 +24,20 @@ h2{
 .count span{
   font-size: 30px;
 }
+
+.chatbox {
+}
+
+.chatbox .text-box{
+  margin-left: 30%;
+  text-align:center;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+}
+
+.chatbox .send-btn{
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+}
