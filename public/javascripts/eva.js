@@ -8,7 +8,7 @@
      canvas = document.getElementById("canvas"); // canvas要素を取得
      stage = new Stage(canvas); // Stageにセットする
 
-     for(i=0;i<200;i++){
+     for(i=0;i<100;i++){
        e = new Message();
        if(Math.random() > 0.5){
          e.x = canvas.offsetWidth - 500;

@@ -8,15 +8,19 @@ body{
 canvas{
   background-color: rgb(41,135,174);
 }
+
 h2{
     color: white;
 }
 .count{
+  background: black;
   z-index: 9999;
+  margin-top: 0 auto;
   position: absolute;
-  font-size: 40px;
+  font-size: 12px;
+  padding: 10px;
+  font-weight: bold;
 }
 .count span{
-  font-size: 56px;
-  margin-left: 10px;
+  font-size: 30px;
 }

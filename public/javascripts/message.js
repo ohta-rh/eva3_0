@@ -10,8 +10,8 @@
     circle.graphics.setStrokeStyle(8);
     circle.graphics.beginStroke("#0000FF");
     circle.graphics.beginStroke("white");
-    circle.graphics.drawCircle(0,0,73);
-    circle.alpha = 0.3;
+    circle.graphics.drawCircle(0,0,88);
+    circle.alpha = 0.2;
     circle.graphics.endFill();
     return circle;
   }
