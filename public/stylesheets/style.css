@@ -20,6 +20,8 @@ h2{
   font-size: 12px;
   padding: 10px;
   font-weight: bold;
+  -moz-border-radius-bottomright: 20px;
+  -webkit-border-bottom-right-radius: 20px;
 }
 .count span{
   font-size: 30px;
@@ -29,8 +31,8 @@ h2{
 }
 
 .chatbox .text-box{
-  margin-left: 30%;
-  text-align:center;
+  margin-left: 20%;
+  text-align:left;
   border-radius: 5px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
