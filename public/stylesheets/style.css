@@ -1,0 +1,17 @@
+body{
+    font-family: 'リュウミンU-KL', 'リュウミンH-KL', 'マティス-EB',
+                 'RFファイン-ME', 'ＤＨＰ極太明朝体', 'ＤＦＰ極太明朝体', 'AR P明朝体U', 'AR明朝体U',
+                 'HGP平成明朝体W9', 'HGS平成明朝体W9', 'HG平成明朝体W9', 'ＤＨＰ平成明朝体W7','ＤＦ平成明朝体W7', serif;
+    color: white;
+    background-color: rgb(6,77,94);
+}
+
+.count{
+  z-index: 9999;
+  position: absolute;
+  font-size: 40px;
+}
+.count span{
+  font-size: 56px;
+  margin-left: 10px;
+}
