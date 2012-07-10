@@ -23,7 +23,7 @@ h2{
   -moz-border-radius-bottomright: 20px;
   -webkit-border-bottom-right-radius: 20px;
 }
-.count span{
+.count .timer{
   font-size: 30px;
 }
 

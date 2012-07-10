@@ -12,6 +12,7 @@
 <script type="text/javascript" src="/javascripts/easeljs-0.4.2.min.js"></script>
 <script type="text/javascript" src="/javascripts/eva.js"></script>
 <script type="text/javascript" src="/javascripts/message.js"></script>
+<script type="text/javascript" src="/javascripts/timer.js"></script>
 <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
 
 <style>
@@ -20,9 +21,9 @@
 <!-- We also provide hosted minified versions of all CreateJS libraries.
 http://code.createjs.com -->
 <body>
-  <div class="count">
-    公開開始迄、0日と
-     <span>00:00:00</span>時間です
+<div class="count">
+  公開開始迄、<span id="day" style="color:red">0</span>日と
+     <span class="timer" id="timer">00:00:00</span>時間です
   </div>
   <h2 style="margin-top: 200px;margin-left:100px; position: absolute; color:white;z-index:9999;">エヴァンゲリオン新劇場版:You can (not) redo.<br><span class="opened">西暦2012年11月17日公開</span></h2>
   <canvas class="canvasmain" id="canvas" width="1280" height="480">
