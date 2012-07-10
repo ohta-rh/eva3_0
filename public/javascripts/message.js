@@ -6,7 +6,7 @@
 
   function Message(prop){
     circle = this.initialize();
-    circle.graphics.beginFill("#064D5E");
+    circle.graphics.beginFill("#2987AE");
     circle.graphics.setStrokeStyle(8);
     circle.graphics.beginStroke("#0000FF");
     circle.graphics.beginStroke("white");
