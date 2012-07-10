@@ -5,6 +5,9 @@
   var list = []
   var socket;
   var product_url = 'http://you-can-not-redo.herokuapp.com'
+
+  function send_message(){
+  }
    function init() {
 
      socket = location.hostname == 'localhost' ? io.connect("http://localhost:3000") : io.connect(product_url);
@@ -12,7 +15,7 @@
 
      //Socket関係=====START
      socket.on("message", function (data) {
-       label = new Text(data.value, "20px arial", "#FFF");
+       label = new Text(data.value, "20px serif", "#000");
        e = new Message();
        if(Math.random() > 0.5){
          e.x = Math.random() * 1200;
@@ -27,15 +30,15 @@
        list.push(e);
      });
 
-     $('#send-btn').click(function(){
+     $('#chat-form').submit(function(){
        msg = $("#text-box").val();
        $("#text-box").val("");
        if (msg.length > 0) {
          socket.emit("message", {value:msg})
         }
+       return false;
      });
 
-     
      //=================END
 
      opened_at = new Date(2012,11,17,0,0,0);
