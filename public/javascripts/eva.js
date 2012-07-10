@@ -15,9 +15,9 @@
        label = new Text(data.value, "20px arial", "#FFF");
        e = new Message();
        if(Math.random() > 0.5){
-         e.x = Math.random() + 200;
+         e.x = Math.random() * 1200;
        }else{
-         e.x = Math.random() + 400;
+         e.x = Math.random() * 800;
        }
        e.y = Math.random() * 400;
        label.x = e.x
@@ -42,7 +42,7 @@
      canvas = document.getElementById("canvas"); // canvas要素を取得
      stage = new Stage(canvas); // Stageにセットする
 
-     for(i=0;i<100;i++){
+     for(i=0;i<30;i++){
        e = new Message();
        if(Math.random() > 0.5){
          e.x = canvas.offsetWidth - 500;
