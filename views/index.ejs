@@ -26,7 +26,7 @@ http://code.createjs.com -->
      <span class="timer" id="timer">00:00:00</span>時間です
   </div>
   <h2 style="margin-top: 200px;margin-left:100px; position: absolute; color:white;z-index:9999;">エヴァンゲリオン新劇場版:You can (not) redo.<br><span class="opened">西暦2012年11月17日公開</span></h2>
-  <canvas class="canvasmain" id="canvas" width="1280" height="480">
+  <canvas class="canvasmain" id="canvas" width="1280px;" height="600px;">
   </canvas>
   <div class="chatbox">
     <a href="http://www.evangelion.co.jp/" style="float:left" target="_blank"><img src="/images/bnr_200.gif" /></a>
@@ -34,6 +34,15 @@ http://code.createjs.com -->
       <input type="text" class="text-box" id="text-box" value="" size="60" />
       <input type="submit" id="send-btn" class="send-btn" value="send" />
     </form>
+  <div class="fb-like" data-send="false" data-layout="button_count" data-width="150" data-show-faces="true" style="float:right;"></div>
   </div>
+  <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+	  if (d.getElementById(id)) return;
+	    js = d.createElement(s); js.id = id;
+	      js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1&appId=147251641968742";
+	        fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script>
 </body>
 </html>

@@ -41,16 +41,21 @@
 
      //=================END
 
+     thewidth=$("#canvas").parent().width();
+     $("#canvas").attr("width",thewidth);
+     theheight = $("#canvas").parent().height() * 0.8;
+     $("#canvas").attr("height", theheight);
+
      opened_at = new Date(2012,11,17,0,0,0);
      canvas = document.getElementById("canvas"); // canvas要素を取得
      stage = new Stage(canvas); // Stageにセットする
 
-     for(i=0;i<30;i++){
+     for(i=0;i<50;i++){
        e = new Message();
        if(Math.random() > 0.5){
-         e.x = canvas.offsetWidth - 500;
+         e.x = canvas.offsetWidth - ( thewidth * 0.4);
        }else{
-         e.x = canvas.offsetWidth + 500;
+         e.x = canvas.offsetWidth + ( thewidth * 0.4);
        }
        e.y = Math.random() * canvas.offsetHeight;
        list.push(e);
@@ -61,7 +66,7 @@
     }
 
     Ticker.addListener(window); // window.tick()を40FPSで呼び出す
-    Ticker.setFPS(30);
+    Ticker.setFPS(33);
   }
 
   function tick(){
