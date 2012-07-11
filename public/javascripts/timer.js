@@ -1,10 +1,9 @@
 (function(window){
 var opened_at = '2012/11/17 8:00:00';
-var day, hour, min, sec;
-var timer;
+var day, hour, min, sec, timer;
 
 function start(){
-  Timer1=setInterval(function(){
+  timer=setInterval(function(){
     today = new Date();
     diff = Date.parse(opened_at) - Date.parse(today);
     day = parseInt(diff / 86400000)
@@ -17,8 +16,9 @@ function start(){
     if(hour < 10) { hour = "0" + hour; }
     if(min < 10) { min = "0" + min; }
     if(sec < 10) { sec = "0" + sec; }
-    hms_text =  hour + ":" + min + ":" + sec
-    $("#timer").html(hms_text);
+
+    $("#hour").html(hour + "時間"); $("#min").html(min + "分"); $("#sec").html(sec + "秒");
+
     $("#day").html(day);
   },1000);
 }
