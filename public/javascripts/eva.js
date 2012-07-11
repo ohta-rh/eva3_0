@@ -18,9 +18,9 @@
        label = new Text(data.value, "20px serif", "#000");
        e = new Message();
        if(Math.random() > 0.5){
-         e.x = Math.random() * 1200;
-       }else{
          e.x = Math.random() * 800;
+       }else{
+         e.x = Math.random() * 600;
        }
        e.y = Math.random() * 400;
        label.x = e.x
@@ -66,7 +66,7 @@
     }
 
     Ticker.addListener(window); // window.tick()を40FPSで呼び出す
-    Ticker.setFPS(33);
+    Ticker.setFPS(30);
   }
 
   function tick(){
