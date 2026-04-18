@@ -1,62 +1,91 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="ja">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <meta name="Keywords" content="エヴァンゲリオン,エヴァンゲリオン新劇場版,新劇場版:Q,ティザー,node.js,javascript,you can (not) redo" lang="ja">
-  <meta name="description" content="エヴァンゲリオン新劇場版:Q you can (not) redo. 2012年11月17日公開" lang="ja">
-<title>Evangelion3.0: You Can (Not) Redo.</title>
-<% if(process.env.NODE_ENV == "development" || !process.env.NODE_ENV){ %>
-  <script type="text/javascript" src="http://localhost:3000/socket.io/socket.io.js"></script>
-<%}else{%>
-  <script type="text/javascript" src="http://you-can-not-redo.herokuapp.com/socket.io/socket.io.js"></script>
-<%}%>
-<script type="text/javascript" src="/javascripts/jquery.min.js"></script>
-<script type="text/javascript" src="/javascripts/easeljs-0.4.2.min.js"></script>
-<script type="text/javascript" src="/javascripts/eva.js"></script>
-<script type="text/javascript" src="/javascripts/message.js"></script>
-<script type="text/javascript" src="/javascripts/timer.js"></script>
-<link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
-
-<!-- We also provide hosted minified versions of all CreateJS libraries.
-http://code.createjs.com -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0f14" />
+  <meta name="color-scheme" content="dark" />
+  <title>Evangelion 3.0+1.0+: You Can (Not) Redo. — 2026</title>
+  <meta name="description" content="ヱヴァンゲリヲン新劇場版:Q / シン・エヴァンゲリオン a-synchronized キャンペーンサイト。リアルタイム共鳴メッセージとカウントダウン。" />
+  <meta name="keywords" content="エヴァンゲリオン, 新劇場版, you can (not) redo, リアルタイム, 2026" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Evangelion 3.0: You Can (Not) Redo. — 2026" />
+  <meta property="og:description" content="A-synchronized real-time campaign site. Modernized for 2026." />
+  <link rel="preload" href="/javascripts/eva.js" as="script" />
+  <link rel="stylesheet" href="/stylesheets/style.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23ff3b30' d='M16 2 2 16l14 14 14-14z'/%3E%3C/svg%3E" />
+</head>
 <body>
-<div class="count">
-  公開開始迄、<span id="day" style="color:red">---</span>日と
-  <span class="timer" id="hour">--時間</span><span class="timer" id="min">--分</span><span class="timer" id="sec">--秒</span>です
-  </div>
-  <h2 style="margin-top: 200px;margin-left:100px; position: absolute; color:white;z-index:9999;">ヱヴァンゲリヲン新劇場版:You Can (Not) Redo.<br><span class="opened">西暦2012年11月17日公開</span></h2>
-  <canvas class="canvasmain" id="canvas" width="1280px;" height="600px;">
-  </canvas>
-  <div class="chatbox">
-    <a href="http://www.evangelion.co.jp/" style="float:left" target="_blank"><img src="/images/bnr_200.gif" /></a>
-    <form id="chat-form">
-      <input type="text" class="text-box" id="text-box" value="" size="60" />
-      <input type="submit" id="send-btn" class="send-btn" value="send" />
+  <a class="skip-link" href="#main">本文へスキップ</a>
+
+  <header class="hud" role="banner">
+    <div class="hud__brand" aria-label="NERV">
+      <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+        <polygon points="32,4 60,32 32,60 4,32" fill="none" stroke="currentColor" stroke-width="2" />
+        <polygon points="32,12 52,32 32,52 12,32" fill="currentColor" opacity="0.2" />
+      </svg>
+      <span>NERV / EVA-3.0</span>
+    </div>
+    <div class="hud__status" role="status" aria-live="polite">
+      <span class="dot" id="conn-dot" data-state="pending" aria-hidden="true"></span>
+      <span id="conn-label">接続中…</span>
+      <span class="hud__divider" aria-hidden="true">/</span>
+      <span><span id="presence-count">0</span> 名同期中</span>
+    </div>
+  </header>
+
+  <main id="main" class="stage">
+    <section class="countdown" aria-label="公開までのカウントダウン">
+      <p class="countdown__caption">公開開始迄</p>
+      <div class="countdown__grid" role="timer" aria-live="off">
+        <div><strong id="cd-day">--</strong><span>days</span></div>
+        <div><strong id="cd-hour">--</strong><span>hours</span></div>
+        <div><strong id="cd-min">--</strong><span>minutes</span></div>
+        <div><strong id="cd-sec">--</strong><span>seconds</span></div>
+      </div>
+      <time id="release-at" class="countdown__date"
+            datetime="<%= releaseAt %>"><%= releaseAt %></time>
+    </section>
+
+    <h1 class="title">
+      <span>ヱヴァンゲリヲン新劇場版</span>
+      <em>You Can (Not) Redo.</em>
+    </h1>
+
+    <canvas id="canvas" class="canvas" aria-label="共鳴メッセージ可視化"></canvas>
+    <div class="scanlines" aria-hidden="true"></div>
+    <div id="flash" class="flash" aria-hidden="true"></div>
+  </main>
+
+  <footer class="console" role="contentinfo">
+    <form id="chat-form" class="console__form" autocomplete="off">
+      <label class="visually-hidden" for="text-box">メッセージ</label>
+      <input
+        id="text-box"
+        class="console__input"
+        name="message"
+        type="text"
+        maxlength="140"
+        placeholder="A.T. Field を越えて、メッセージを送る…"
+        enterkeyhint="send"
+        spellcheck="false"
+      />
+      <button id="send-btn" class="console__send" type="submit">
+        <span aria-hidden="true">▶</span>
+        <span>SEND</span>
+      </button>
+      <button id="signal-btn" class="console__signal" type="button" title="ALERT">
+        <span aria-hidden="true">!</span>
+      </button>
     </form>
-  <div class="fb-like" data-send="false" data-layout="button_count" data-width="150" data-show-faces="true" style="float:right;"></div>
-</div>
-  <div id="fb-root"></div>
-    <script>(function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
-          js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1&appId=147251641968742";
-          fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));</script>
+    <p class="console__meta">
+      © Evangelion Project · A-synchronized site re-engineered 2026 ·
+      <a href="/healthz" rel="noopener">status</a>
+    </p>
+  </footer>
 
-
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-33305949-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
+  <script src="/socket.io/socket.io.js" defer></script>
+  <script type="module" src="/javascripts/timer.js"></script>
+  <script type="module" src="/javascripts/eva.js"></script>
 </body>
 </html>
