@@ -1,8 +1,16 @@
+import { Router } from 'express';
 
-/*
- * GET home page.
- */
+const router = Router();
 
-exports.index = function(req, res){
-  res.render('index', { title: 'Express' });
-};
+router.get('/', (req, res) => {
+  res.render('index', {
+    title: 'Evangelion 3.0: You Can (Not) Redo.',
+    releaseAt: res.locals.releaseAt,
+  });
+});
+
+router.get('/healthz', (req, res) => {
+  res.json({ ok: true, uptime: process.uptime() });
+});
+
+export default router;

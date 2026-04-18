@@ -1,5 +1,26 @@
-evangelion3.0 you can (not) redo
+evangelion3.0 — you can (not) redo
 
-a-synclonized campaign site
+A-synchronized real-time campaign site, originally built in 2012,
+re-engineered for 2026.
 
-http://you-can-not-redo.herokuapp.com/
+Stack
+- Node.js 22 LTS (ESM)
+- Express 5
+- Socket.IO 4 (WebSocket-first)
+- EJS templates
+- helmet + compression
+- Vanilla JS, Canvas2D (no jQuery / no EaselJS)
+- Modern CSS (custom properties, color-mix, container queries, dvh, backdrop-filter)
+
+Run
+  npm install
+  npm start            # http://localhost:3000
+  npm run dev          # node --watch hot reload
+
+Configuration
+  PORT=3000
+  NODE_ENV=development|production
+  RELEASE_AT=ISO-8601 (e.g. 2026-12-17T00:00:00+09:00)
+
+Health
+  GET /healthz -> { ok: true, uptime }
