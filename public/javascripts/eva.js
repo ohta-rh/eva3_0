@@ -1,25 +1,37 @@
-// eva.js — modernized 2026
-// Vanilla JS, Canvas2D + DPR-aware rendering, Socket.IO real-time messaging.
+// eva.js — A-SYNC TERMINAL, renewed 2026
+// Vanilla JS · Canvas2D (DPR-aware) · Socket.IO realtime
+// Drives: message field, received log, MAGI sync meters, char counter.
 
-const canvas = document.getElementById('canvas');
+const $ = (id) => document.getElementById(id);
+
+const canvas = $('canvas');
 const ctx = canvas.getContext('2d', { alpha: true });
-const flash = document.getElementById('flash');
-const presence = document.getElementById('presence-count');
-const connDot = document.getElementById('conn-dot');
-const connLabel = document.getElementById('conn-label');
-const form = document.getElementById('chat-form');
-const input = document.getElementById('text-box');
-const signalBtn = document.getElementById('signal-btn');
+const flash = $('flash');
+const presenceEl = $('presence-count');
+const connDot = $('conn-dot');
+const connLabel = $('conn-label');
+const form = $('chat-form');
+const input = $('text-box');
+const signalBtn = $('signal-btn');
+const charCount = $('char-count');
+const feedList = $('feed-list');
+const feedEmpty = $('feed-empty');
+const magiVerdict = $('magi-verdict');
+const magiRows = [...document.querySelectorAll('.magi__row')];
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const MAX_BUBBLES = 80;
-const BASE_RADIUS = 56;
-const FONT = '500 16px ui-monospace, "JetBrains Mono", "SF Mono", monospace';
+const MAX_FEED = 30;
+const BASE_RADIUS = 52;
+const FONT = '500 15px ui-monospace, "JetBrains Mono", "SF Mono", monospace';
 
+/* ============================================================
+   Canvas message field
+   ============================================================ */
 const bubbles = [];
 let width = 0;
 let height = 0;
-let dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 2));
+const dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 2));
 
 function resize() {
   const rect = canvas.getBoundingClientRect();
@@ -35,14 +47,13 @@ new ResizeObserver(resize).observe(canvas);
 class Bubble {
   constructor(text = '', { x, y } = {}) {
     this.text = text;
-    this.r = BASE_RADIUS + Math.random() * 24;
+    this.r = BASE_RADIUS + Math.random() * 26;
     this.x = x ?? Math.random() * width;
     this.y = y ?? height + this.r;
     this.vx = (Math.random() - 0.5) * 0.6;
-    this.vy = -0.4 - Math.random() * 0.8;
+    this.vy = -0.4 - Math.random() * 0.85;
     this.life = 1;
-    this.hue = 190 + Math.random() * 40;
-    this.born = performance.now();
+    this.hue = text ? 14 + Math.random() * 16 : 188 + Math.random() * 40; // user msgs warm, ambient cyan
   }
 
   update(dt) {
@@ -53,34 +64,32 @@ class Bubble {
     if (this.y + this.r < 0) this.life = 0;
   }
 
-  draw(ctx) {
-    const grd = ctx.createRadialGradient(this.x, this.y, 4, this.x, this.y, this.r);
-    grd.addColorStop(0, `hsla(${this.hue}, 90%, 70%, 0.55)`);
-    grd.addColorStop(0.7, `hsla(${this.hue}, 90%, 50%, 0.18)`);
-    grd.addColorStop(1, `hsla(${this.hue}, 90%, 40%, 0)`);
-    ctx.fillStyle = grd;
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-    ctx.fill();
+  draw(c) {
+    const grd = c.createRadialGradient(this.x, this.y, 4, this.x, this.y, this.r);
+    grd.addColorStop(0, `hsla(${this.hue}, 92%, 70%, 0.5)`);
+    grd.addColorStop(0.7, `hsla(${this.hue}, 92%, 50%, 0.16)`);
+    grd.addColorStop(1, `hsla(${this.hue}, 92%, 40%, 0)`);
+    c.fillStyle = grd;
+    c.beginPath();
+    c.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    c.fill();
 
-    ctx.strokeStyle = `hsla(${this.hue}, 100%, 80%, 0.85)`;
-    ctx.lineWidth = 1.2;
-    ctx.stroke();
+    c.strokeStyle = `hsla(${this.hue}, 100%, 82%, 0.8)`;
+    c.lineWidth = 1.2;
+    c.stroke();
 
     if (this.text) {
-      ctx.fillStyle = '#e6f1ff';
-      ctx.font = FONT;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      const max = this.r * 1.6;
+      c.fillStyle = '#eaf4ff';
+      c.font = FONT;
+      c.textAlign = 'center';
+      c.textBaseline = 'middle';
       const t = this.text.length > 18 ? this.text.slice(0, 17) + '…' : this.text;
-      ctx.fillText(t, this.x, this.y, max);
+      c.fillText(t, this.x, this.y, this.r * 1.6);
     }
   }
 }
 
-// seed ambient bubbles
-for (let i = 0; i < 18; i++) {
+for (let i = 0; i < 16; i++) {
   bubbles.push(new Bubble('', { x: Math.random() * width, y: Math.random() * height }));
 }
 
@@ -91,9 +100,8 @@ function frame(now) {
 
   ctx.clearRect(0, 0, width, height);
 
-  // subtle grid sweep
   const sweep = (now / 12) % height;
-  ctx.fillStyle = 'rgba(0, 212, 255, 0.05)';
+  ctx.fillStyle = 'rgba(47, 208, 255, 0.06)';
   ctx.fillRect(0, sweep, width, 1);
 
   for (let i = bubbles.length - 1; i >= 0; i--) {
@@ -112,7 +120,92 @@ function spawn(text) {
   bubbles.push(new Bubble(text, { x: Math.random() * width, y: height + 40 }));
 }
 
-// ===== Socket.IO wiring =====
+/* ============================================================
+   Received log
+   ============================================================ */
+const timeFmt = new Intl.DateTimeFormat('ja-JP', {
+  hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false, timeZone: 'Asia/Tokyo',
+});
+
+function pushFeed(text, at) {
+  feedEmpty?.classList.add('is-hidden');
+  const li = document.createElement('li');
+  li.className = 'feed__item';
+
+  const time = document.createElement('span');
+  time.className = 'feed__time';
+  time.textContent = timeFmt.format(at ? new Date(at) : new Date());
+
+  const msg = document.createElement('span');
+  msg.className = 'feed__text';
+  msg.textContent = text;
+
+  li.append(time, msg);
+  feedList.prepend(li);
+
+  while (feedList.children.length > MAX_FEED) {
+    feedList.lastElementChild?.remove();
+  }
+}
+
+/* ============================================================
+   MAGI sync meters — react to presence + traffic
+   ============================================================ */
+const magi = {
+  base: [0, 0, 0],
+  load: 0,
+  presence: 0,
+};
+
+function renderMagi() {
+  let sum = 0;
+  magiRows.forEach((row, i) => {
+    const jitter = (Math.random() - 0.5) * 4;
+    const v = Math.max(4, Math.min(99,
+      Math.round(magi.base[i] + magi.presence * 6 + magi.load * 22 + jitter)));
+    sum += v;
+    row.querySelector('i').style.setProperty('--w', v + '%');
+    row.querySelector('.magi__val').textContent = String(v).padStart(2, '0') + '%';
+  });
+  if (magiVerdict && magiVerdict.dataset.state !== 'alert') {
+    const avg = sum / magiRows.length;
+    if (avg >= 66) {
+      magiVerdict.dataset.state = 'approved';
+      magiVerdict.textContent = 'JUDGEMENT: APPROVED';
+    } else {
+      magiVerdict.dataset.state = 'pending';
+      magiVerdict.textContent = 'JUDGEMENT: PENDING';
+    }
+  }
+  magi.load *= 0.86; // traffic decays
+}
+magi.base = [38, 44, 50];
+setInterval(() => { if (!reduceMotion || magi.load > 0.01) renderMagi(); }, 1200);
+renderMagi();
+
+function magiAlert() {
+  if (!magiVerdict) return;
+  magiVerdict.dataset.state = 'alert';
+  magiVerdict.textContent = 'JUDGEMENT: ALERT';
+  setTimeout(() => {
+    magiVerdict.dataset.state = 'pending';
+    magiVerdict.textContent = 'JUDGEMENT: PENDING';
+    renderMagi();
+  }, 2400);
+}
+
+/* ============================================================
+   Char counter
+   ============================================================ */
+input?.addEventListener('input', () => {
+  const n = input.value.length;
+  charCount.textContent = `${n}/140`;
+  charCount.classList.toggle('is-near', n >= 120);
+});
+
+/* ============================================================
+   Socket.IO wiring
+   ============================================================ */
 function connect() {
   if (typeof io !== 'function') {
     setTimeout(connect, 200);
@@ -129,14 +222,27 @@ function connect() {
   socket.on('disconnect', () => setState('offline', '切断'));
   socket.on('connect_error', () => setState('offline', '接続失敗'));
 
-  socket.on('message', ({ value }) => spawn(value));
-  socket.on('presence', ({ count }) => {
-    presence.textContent = String(count ?? 0);
+  socket.on('message', ({ value, at }) => {
+    spawn(value);
+    pushFeed(value, at);
+    magi.load = Math.min(1, magi.load + 0.5);
+    renderMagi();
   });
+
+  socket.on('presence', ({ count }) => {
+    const n = count ?? 0;
+    presenceEl.textContent = String(n);
+    magi.presence = Math.min(8, n);
+  });
+
   socket.on('alert', () => {
     flash.classList.add('is-on');
+    document.body.dataset.phase = 'alert';
+    magiAlert();
     setTimeout(() => flash.classList.remove('is-on'), 180);
+    setTimeout(() => { document.body.dataset.phase = 'standby'; }, 2400);
   });
+
   socket.on('blackout', () => {
     flash.classList.add('is-blackout');
     setTimeout(() => flash.classList.remove('is-blackout'), 1200);
@@ -148,6 +254,8 @@ function connect() {
     if (!value) return;
     socket.emit('message', { value });
     input.value = '';
+    charCount.textContent = '0/140';
+    charCount.classList.remove('is-near');
   });
 
   signalBtn?.addEventListener('click', () => socket.emit('signal', 'alert'));

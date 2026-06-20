@@ -3,84 +3,155 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#0a0f14" />
+  <meta name="theme-color" content="#05080c" />
   <meta name="color-scheme" content="dark" />
-  <title>Evangelion 3.0+1.0+: You Can (Not) Redo. — 2026</title>
-  <meta name="description" content="ヱヴァンゲリヲン新劇場版:Q / シン・エヴァンゲリオン a-synchronized キャンペーンサイト。リアルタイム共鳴メッセージとカウントダウン。" />
-  <meta name="keywords" content="エヴァンゲリオン, 新劇場版, you can (not) redo, リアルタイム, 2026" />
+  <title>EVANGELION 3.0+1.0 — You Can (Not) Redo. / NERV A-SYNC TERMINAL</title>
+  <meta name="description" content="ヱヴァンゲリヲン新劇場版 a-synchronized キャンペーンサイト。MAGIシステム連動のリアルタイム共鳴メッセージとカウントダウン。2026 リニューアル版。" />
+  <meta name="keywords" content="エヴァンゲリオン, 新劇場版, you can (not) redo, NERV, MAGI, リアルタイム, 2026" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Evangelion 3.0: You Can (Not) Redo. — 2026" />
-  <meta property="og:description" content="A-synchronized real-time campaign site. Modernized for 2026." />
+  <meta property="og:title" content="EVANGELION 3.0 — You Can (Not) Redo. / NERV A-SYNC TERMINAL" />
+  <meta property="og:description" content="MAGIシステム連動の a-synchronized リアルタイムキャンペーンサイト。2026 リニューアル版。" />
   <link rel="preload" href="/javascripts/eva.js" as="script" />
   <link rel="stylesheet" href="/stylesheets/style.css" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23ff3b30' d='M16 2 2 16l14 14 14-14z'/%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23ff5a1f' d='M16 2 2 16l14 14 14-14z'/%3E%3Cpath fill='%23000' opacity='.35' d='M16 8 8 16l8 8 8-8z'/%3E%3C/svg%3E" />
 </head>
-<body>
+<body data-phase="standby">
   <a class="skip-link" href="#main">本文へスキップ</a>
 
+  <!-- ====== Background layers ====== -->
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
+  <div id="flash" class="flash" aria-hidden="true"></div>
+
+  <!-- ====== HUD ====== -->
   <header class="hud" role="banner">
     <div class="hud__brand" aria-label="NERV">
-      <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
-        <polygon points="32,4 60,32 32,60 4,32" fill="none" stroke="currentColor" stroke-width="2" />
-        <polygon points="32,12 52,32 32,52 12,32" fill="currentColor" opacity="0.2" />
+      <svg class="hud__leaf" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+        <polygon points="32,3 61,32 32,61 3,32" fill="none" stroke="currentColor" stroke-width="2.4" />
+        <polygon points="32,14 50,32 32,50 14,32" fill="currentColor" opacity="0.18" />
+        <line x1="32" y1="3" x2="32" y2="61" stroke="currentColor" stroke-width="1" opacity="0.5" />
       </svg>
-      <span>NERV / EVA-3.0</span>
+      <span class="hud__wordmark">NERV<small>EVA-3.0 / A-SYNC TERMINAL</small></span>
     </div>
-    <div class="hud__status" role="status" aria-live="polite">
-      <span class="dot" id="conn-dot" data-state="pending" aria-hidden="true"></span>
-      <span id="conn-label">接続中…</span>
-      <span class="hud__divider" aria-hidden="true">/</span>
-      <span><span id="presence-count">0</span> 名同期中</span>
+
+    <div class="hud__center" role="status" aria-live="polite">
+      <span class="chip">
+        <span class="dot" id="conn-dot" data-state="pending" aria-hidden="true"></span>
+        <span id="conn-label">接続中…</span>
+      </span>
+      <span class="chip chip--ghost">
+        SYNC <strong id="presence-count">0</strong>
+      </span>
+    </div>
+
+    <div class="hud__clock" aria-hidden="true">
+      <span id="hud-time" class="hud__time">--:--:--</span>
+      <span class="hud__tz">JST · TOKYO-3</span>
     </div>
   </header>
 
-  <main id="main" class="stage">
-    <section class="countdown" aria-label="公開までのカウントダウン">
-      <p class="countdown__caption">公開開始迄</p>
-      <div class="countdown__grid" role="timer" aria-live="off">
-        <div><strong id="cd-day">--</strong><span>days</span></div>
-        <div><strong id="cd-hour">--</strong><span>hours</span></div>
-        <div><strong id="cd-min">--</strong><span>minutes</span></div>
-        <div><strong id="cd-sec">--</strong><span>seconds</span></div>
+  <main id="main" class="layout">
+    <!-- ====== Hero / Countdown ====== -->
+    <section class="hero" aria-label="公開カウントダウン">
+      <p class="hero__eyebrow">ヱヴァンゲリヲン新劇場版 / THEATRICAL RELEASE</p>
+      <h1 class="hero__title">
+        <span class="hero__kana">You Can <em>(Not)</em> Redo.</span>
+      </h1>
+      <p class="hero__lead">
+        A.T. フィールドを越えて世界中の鼓動が同期する、リアルタイム共鳴ターミナル。
+        メッセージは MAGI を介して全観測者へ伝播します。
+      </p>
+
+      <div class="countdown" role="timer" aria-live="off">
+        <p class="countdown__caption">公開開始迄 / TIME TO LAUNCH</p>
+        <div class="countdown__grid">
+          <div class="cd-cell"><strong id="cd-day">--</strong><span>days</span></div>
+          <div class="cd-sep" aria-hidden="true">:</div>
+          <div class="cd-cell"><strong id="cd-hour">--</strong><span>hours</span></div>
+          <div class="cd-sep" aria-hidden="true">:</div>
+          <div class="cd-cell"><strong id="cd-min">--</strong><span>min</span></div>
+          <div class="cd-sep" aria-hidden="true">:</div>
+          <div class="cd-cell"><strong id="cd-sec">--</strong><span>sec</span></div>
+        </div>
+        <time id="release-at" class="countdown__date"
+              datetime="<%= releaseAt %>"><%= releaseAt %></time>
       </div>
-      <time id="release-at" class="countdown__date"
-            datetime="<%= releaseAt %>"><%= releaseAt %></time>
     </section>
 
-    <h1 class="title">
-      <span>ヱヴァンゲリヲン新劇場版</span>
-      <em>You Can (Not) Redo.</em>
-    </h1>
+    <!-- ====== Visualization field ====== -->
+    <section class="field" aria-label="共鳴メッセージ可視化">
+      <div class="field__head">
+        <span class="field__tag">PATTERN BLUE</span>
+        <span class="field__hint">送信されたメッセージがフィールドに浮遊します</span>
+      </div>
+      <canvas id="canvas" class="canvas"></canvas>
+      <div class="field__corner field__corner--tl" aria-hidden="true"></div>
+      <div class="field__corner field__corner--tr" aria-hidden="true"></div>
+      <div class="field__corner field__corner--bl" aria-hidden="true"></div>
+      <div class="field__corner field__corner--br" aria-hidden="true"></div>
+    </section>
 
-    <canvas id="canvas" class="canvas" aria-label="共鳴メッセージ可視化"></canvas>
-    <div class="scanlines" aria-hidden="true"></div>
-    <div id="flash" class="flash" aria-hidden="true"></div>
+    <!-- ====== MAGI + Feed sidebar ====== -->
+    <aside class="panel" aria-label="MAGIシステムと受信ログ">
+      <section class="magi" aria-label="MAGIシステム同期状態">
+        <h2 class="panel__title">MAGI SYSTEM</h2>
+        <ul class="magi__list">
+          <li class="magi__row" data-magi="MELCHIOR">
+            <span class="magi__name">MELCHIOR<small>·1</small></span>
+            <span class="magi__bar"><i style="--w:0%"></i></span>
+            <span class="magi__val">00%</span>
+          </li>
+          <li class="magi__row" data-magi="BALTHASAR">
+            <span class="magi__name">BALTHASAR<small>·2</small></span>
+            <span class="magi__bar"><i style="--w:0%"></i></span>
+            <span class="magi__val">00%</span>
+          </li>
+          <li class="magi__row" data-magi="CASPER">
+            <span class="magi__name">CASPER<small>·3</small></span>
+            <span class="magi__bar"><i style="--w:0%"></i></span>
+            <span class="magi__val">00%</span>
+          </li>
+        </ul>
+        <p class="magi__verdict" id="magi-verdict" data-state="pending">JUDGEMENT: PENDING</p>
+      </section>
+
+      <section class="feed" aria-label="受信メッセージログ">
+        <h2 class="panel__title">RECEIVED LOG</h2>
+        <ul id="feed-list" class="feed__list" aria-live="polite"></ul>
+        <p id="feed-empty" class="feed__empty">— 受信待機中 —</p>
+      </section>
+    </aside>
   </main>
 
+  <!-- ====== Console ====== -->
   <footer class="console" role="contentinfo">
     <form id="chat-form" class="console__form" autocomplete="off">
       <label class="visually-hidden" for="text-box">メッセージ</label>
-      <input
-        id="text-box"
-        class="console__input"
-        name="message"
-        type="text"
-        maxlength="140"
-        placeholder="A.T. Field を越えて、メッセージを送る…"
-        enterkeyhint="send"
-        spellcheck="false"
-      />
-      <button id="send-btn" class="console__send" type="submit">
-        <span aria-hidden="true">▶</span>
-        <span>SEND</span>
+      <div class="console__field">
+        <span class="console__prompt" aria-hidden="true">&gt;</span>
+        <input
+          id="text-box"
+          class="console__input"
+          name="message"
+          type="text"
+          maxlength="140"
+          placeholder="A.T. Field を越えて、メッセージを送る…"
+          enterkeyhint="send"
+          spellcheck="false"
+        />
+        <span id="char-count" class="console__count" aria-hidden="true">0/140</span>
+      </div>
+      <button id="send-btn" class="btn btn--send" type="submit">
+        <span aria-hidden="true">▶</span><span>SEND</span>
       </button>
-      <button id="signal-btn" class="console__signal" type="button" title="ALERT">
-        <span aria-hidden="true">!</span>
+      <button id="signal-btn" class="btn btn--alert" type="button" title="ALERT を全観測者へ発報">
+        <span aria-hidden="true">!</span><span class="btn__label">ALERT</span>
       </button>
     </form>
     <p class="console__meta">
-      © Evangelion Project · A-synchronized site re-engineered 2026 ·
-      <a href="/healthz" rel="noopener">status</a>
+      © Evangelion Project · A-synchronized terminal · renewed 2026 ·
+      <a href="/healthz" rel="noopener">system status</a>
     </p>
   </footer>
 
