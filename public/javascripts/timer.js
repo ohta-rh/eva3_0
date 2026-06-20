@@ -30,6 +30,18 @@ if (el.date) {
 
 const pad = (n) => String(n).padStart(2, '0');
 
+// ===== HUD live clock (JST / Tokyo-3) =====
+const hudTime = document.getElementById('hud-time');
+if (hudTime) {
+  const clockFmt = new Intl.DateTimeFormat('ja-JP', {
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+    hour12: false, timeZone: 'Asia/Tokyo',
+  });
+  const clock = () => { hudTime.textContent = clockFmt.format(new Date()); };
+  clock();
+  setInterval(clock, 1000);
+}
+
 function tick() {
   const diff = target.getTime() - Date.now();
   if (diff <= 0) {
